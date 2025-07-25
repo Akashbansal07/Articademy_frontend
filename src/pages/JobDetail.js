@@ -27,6 +27,8 @@ const JobDetail = () => {
 
   useEffect(() => {
     if (id) {
+      // Scroll to top when component mounts or id changes
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       fetchJob();
       fetchRelatedJobs();
     }
@@ -164,56 +166,77 @@ const JobDetail = () => {
           </div>
 
           {/* Job Header */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-              <div className="flex items-start space-x-6">
-                {job.companyLogo ? (
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg bg-white p-2">
-                    <img
-                      src={job.companyLogo}
-                      alt={job.companyName}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <FiBriefcase className="h-10 w-10 text-white" />
-                  </div>
-                )}
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.role}</h1>
-                  <p className="text-xl text-gray-700 mb-3">{job.companyName}</p>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
-                      <FiMapPin className="h-4 w-4 mr-1" />
-                      {job.location}
-                    </span>
-                    <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                      <FiBriefcase className="h-4 w-4 mr-1" />
-                      {job.experience}
-                    </span>
-                    <span className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
-                      <FiClock className="h-4 w-4 mr-1" />
-                      {job.employmentType}
-                    </span>
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-2xl border border-white/20">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
+                <div className="flex items-start space-x-4 sm:space-x-6 flex-1">
+                  {job.companyLogo ? (
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden shadow-lg bg-white p-2 flex-shrink-0">
+                      <img
+                        src={job.companyLogo}
+                        alt={job.companyName}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+                      <FiBriefcase className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{job.role}</h1>
+                    <p className="text-lg sm:text-xl text-gray-700 mb-3">{job.companyName}</p>
+                    
+                    {/* Mobile Apply Button - Shows only on mobile */}
+                    <div className="sm:hidden mb-4">
+                      <button
+                        onClick={handleApply}
+                        disabled={applying}
+                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                      >
+                        {applying ? (
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                        ) : (
+                          <>
+                            <FiExternalLink className="h-5 w-5" />
+                            <span>Apply Now</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                      <span className="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+                        <FiMapPin className="h-4 w-4 mr-1" />
+                        {job.location}
+                      </span>
+                      <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                        <FiBriefcase className="h-4 w-4 mr-1" />
+                        {job.experience}
+                      </span>
+                      <span className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
+                        <FiClock className="h-4 w-4 mr-1" />
+                        {job.employmentType}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={handleShare}
-                  className="p-3 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all duration-200"
-                  title="Share Job"
-                >
-                  <FiShare2 className="h-5 w-5" />
-                </button>
-                <button
-                  className="p-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200"
-                  title="Save Job"
-                >
-                  <FiBookmark className="h-5 w-5" />
-                </button>
+                
+                <div className="flex items-center space-x-3 sm:self-start">
+                  <button
+                    onClick={handleShare}
+                    className="p-3 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all duration-200"
+                    title="Share Job"
+                  >
+                    <FiShare2 className="h-5 w-5" />
+                  </button>
+                  <button
+                    className="p-3 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all duration-200"
+                    title="Save Job"
+                  >
+                    <FiBookmark className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -319,8 +342,8 @@ const JobDetail = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Apply Card */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-6">
+            {/* Apply Card - Desktop only */}
+            <div className="hidden sm:block bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-6">
               <button
                 onClick={handleApply}
                 disabled={applying}
